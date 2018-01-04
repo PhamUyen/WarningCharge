@@ -1,43 +1,43 @@
 package com.example.steadfast_macmini_05.warningcharge;
 
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ComponentName;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-
+    public static int MY_PERMISSIONS_REQUEST_FLASH_LIGHT = 0;
+    ComponentName component;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1){
-            if(ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.FLASHLIGHT)
-                    != PackageManager.PERMISSION_GRANTED) {
+        component= new ComponentName(this, ChargingReceiver.class);
+        PermissionUtil.requestPermissions(this,
+                new String[]{Manifest.permission.FLASHLIGHT},
+                MY_PERMISSIONS_REQUEST_FLASH_LIGHT);
+    }
 
-                // Ask for the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.FLASHLIGHT},
-                        0);
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(MY_PERMISSIONS_REQUEST_FLASH_LIGHT == requestCode){
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // do nothing
             } else {
-                // Start creating the user interface
-                registerReceiver();
+                disableReceiver();
             }
         }
     }
 
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_POWER_CONNECTED);
-        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-        registerReceiver(new ChargingReceiver(), filter);
+    private void disableReceiver(){
+        int status = getPackageManager().getComponentEnabledSetting(component);
+        if(status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    , PackageManager.DONT_KILL_APP);
+        }
     }
 }

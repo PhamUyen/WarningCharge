@@ -7,10 +7,13 @@ import android.widget.Toast;
 
 
 public class ChargingReceiver extends BroadcastReceiver {
+    public static String KEY_ACTION = "action";
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Toast.makeText(context, intent.getAction(), Toast.LENGTH_SHORT).show();
         Intent intentService = new Intent(context, ChargingService.class);
-        intentService.putExtra("action", intent.getAction());
+        intentService.putExtra(KEY_ACTION, intent.getAction());
         context.startService(intentService);
     }
 }

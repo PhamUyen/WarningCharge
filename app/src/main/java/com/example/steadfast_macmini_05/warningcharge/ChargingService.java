@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import static com.example.steadfast_macmini_05.warningcharge.ChargingReceiver.KEY_ACTION;
+
 public class ChargingService extends Service {
     String action = "";
     MediaPlayer mediaPlayer;
@@ -25,12 +27,12 @@ public class ChargingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getStringExtra("action") != null) {
-            action = intent.getStringExtra("action");
+        if (intent != null && intent.getStringExtra(KEY_ACTION) != null) {
+            action = intent.getStringExtra(KEY_ACTION);
             if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
                 FlashUtil.flickerFlash(this);
                 NotificationUtil.showNotification(this);
-//                playSong();
+                playSong();
 //            showScreenOVerlay(this);
             } else {
                 stopSelf();

@@ -35,7 +35,7 @@ public class ChargingService extends Service {
             if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
                 FlashUtil.flickerFlash();
                 NotificationUtil.showNotification(this);
-                playSong();
+//                playSong();
                 showScreenOVerlay(this);
             } else {
                 stopSelf();
@@ -47,7 +47,7 @@ public class ChargingService extends Service {
     @Override
     public void onDestroy() {
         FlashUtil.stopFlickerFlash();
-        stopSong();
+//        stopSong();
         System.exit(0);
         super.onDestroy();
     }

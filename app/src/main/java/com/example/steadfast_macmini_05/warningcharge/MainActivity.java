@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.steadfast_macmini_05.warningcharge.service.ChargingReceiver;
+import com.example.steadfast_macmini_05.warningcharge.utils.FlashUtil;
+import com.example.steadfast_macmini_05.warningcharge.utils.PermissionUtil;
+
 public class MainActivity extends AppCompatActivity {
     public static int MY_PERMISSIONS_REQUEST_FLASH_LIGHT = 0;
     ComponentName component;
@@ -14,9 +18,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         component= new ComponentName(this, ChargingReceiver.class);
-        PermissionUtil.requestPermissions(this,
-                new String[]{Manifest.permission.FLASHLIGHT},
-                MY_PERMISSIONS_REQUEST_FLASH_LIGHT);
+        if (getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA_FLASH)) {
+            PermissionUtil.requestPermissions(this,
+                    Manifest.permission.FLASHLIGHT,
+                    MY_PERMISSIONS_REQUEST_FLASH_LIGHT);
+        } else {
+            FlashUtil.showAlertConfirmFlash(this);
+        }
     }
 
     @Override
@@ -29,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 // do nothing
             } else {
                 disableReceiver();
+                finish();
             }
         }
     }

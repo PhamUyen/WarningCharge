@@ -35,7 +35,7 @@ public class ChargingService extends Service {
             if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
                 FlashUtil.flickerFlash();
                 NotificationUtil.showNotification(this);
-//                playSong();
+                playSong();
                 showScreenOVerlay(this);
             } else {
                 stopSelf();
@@ -47,7 +47,7 @@ public class ChargingService extends Service {
     @Override
     public void onDestroy() {
         FlashUtil.stopFlickerFlash();
-//        stopSong();
+        stopSong();
         System.exit(0);
         super.onDestroy();
     }
@@ -84,16 +84,19 @@ public class ChargingService extends Service {
         mWindowManager.addView(mView, mLayoutParams);
     }
 
+    //play song from raw folder
     private void playSong() {
         int resID = getResources().getIdentifier("maps", "raw", getPackageName());
         mediaPlayer = MediaPlayer.create(this, resID);
         mediaPlayer.start();
     }
 
+    //stop song
     private void stopSong() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
+            mediaPlayer= null;
         }
     }
 }

@@ -2,12 +2,11 @@ package com.example.steadfast_macmini_05.warningcharge.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
+import com.example.steadfast_macmini_05.warningcharge.R;
 
 public class FlashUtil {
     private static Camera cam;
@@ -30,6 +29,7 @@ public class FlashUtil {
         }
     };
 
+    //turn on flash
     private static void flashOn() {
         isBlink = true;
         Camera.Parameters paramOn = cam.getParameters();
@@ -38,6 +38,7 @@ public class FlashUtil {
         cam.startPreview();
     }
 
+    //turn off flash
     private static void flashOff() {
         isBlink = false;
         Camera.Parameters paramOff = cam.getParameters();
@@ -46,10 +47,12 @@ public class FlashUtil {
         cam.startPreview();
     }
 
+    // show dialog when device not support flash
     public static void showAlertConfirmFlash(Context context) {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage("Your device not support flash!!!!");
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setMessage(context.getString(R.string.content_alert));
+        alertDialogBuilder.setPositiveButton(context.getString(R.string.txt_ok), new
+                DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 arg0.dismiss();
@@ -60,16 +63,19 @@ public class FlashUtil {
         alertDialog.show();
     }
 
+    //make flash flicker on/off
     public static void flickerFlash() {
         cam = Camera.open();
         mStatusChecker.run();
     }
 
+    //stop flicker flash
     public static void stopFlickerFlash() {
         mHandler.removeCallbacks(mStatusChecker);
         if (cam != null) {
             cam.stopPreview();
             cam.release();
+            cam = null;
         }
     }
 }

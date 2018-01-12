@@ -21,9 +21,7 @@ import static android.Manifest.permission.CAMERA;
 
 public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_PERMISSIONS_REQ_CODE = 1000;
-    public static final int OVERLAY_PERMISSION_REQ_CODE = 1234;
     private ComponentName component;
-    private boolean isAllowOverlay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +34,6 @@ public class MainActivity extends AppCompatActivity {
             //check version of device and request permission if needed
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 && !checkPermission()) {
                 requestPermission();
-                //check and request overlay action for app
-                if (!checkOverlay(this)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-                }
             }
         } else {
             FlashUtil.showAlertConfirmFlash(this);
@@ -54,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //if user allow permission: enable receiver
         // disable receiver and finish app if not allow
         if (CAMERA_PERMISSIONS_REQ_CODE == requestCode) {
-            if (grantResults.length > 0 && isAllowOverlay
+            if (grantResults.length > 0
                     && (grantResults[0] == PackageManager.PERMISSION_GRANTED
                     || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 enableReceiver();
@@ -63,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        isAllowOverlay = requestCode == OVERLAY_PERMISSION_REQ_CODE && checkOverlay(this);
     }
 
     //disable broadcast receiver
@@ -101,13 +88,5 @@ public class MainActivity extends AppCompatActivity {
                 CAMERA);
         return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
                 SecondPermissionResult == PackageManager.PERMISSION_GRANTED;
-    }
-
-    // check permission for action alert overlay
-    private boolean checkOverlay(Context context) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            return Settings.canDrawOverlays(context);
-        }
-        return true;
     }
 }

@@ -19,13 +19,10 @@ import com.example.steadfast_macmini_05.warningcharge.utils.NotificationUtil;
  */
 
 public class OverlayActivity extends Activity {
-
-    private static final String TAG = OverlayActivity.class.getSimpleName();
     public static  boolean isWarning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "[onCreate]");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.warning_screen);
 

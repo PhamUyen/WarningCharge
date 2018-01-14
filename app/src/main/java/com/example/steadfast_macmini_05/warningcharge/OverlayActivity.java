@@ -33,7 +33,6 @@ public class OverlayActivity extends Activity {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NotificationUtil.clearNotification();
                 isWarning = false;
                 System.exit(0);
             }

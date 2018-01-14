@@ -46,7 +46,6 @@ public class ChargingService extends Service{
         isWarning = false;
         FlashUtil.stopFlickerFlash();
         stopSong();
-        NotificationUtil.clearNotification();
         System.exit(0);
         super.onDestroy();
     }
